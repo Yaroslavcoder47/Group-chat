@@ -10,6 +10,4 @@ def get_connection():
         dbname= settings.db_name,
         connect_timeout= 5
     )
-
-    
     return connection

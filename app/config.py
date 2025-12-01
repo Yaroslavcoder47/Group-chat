@@ -8,5 +8,7 @@ class Settings(BaseSettings):
     user: str
     password: str
     db_name: str
+    conn_str: str
+    
 
 settings = Settings()
