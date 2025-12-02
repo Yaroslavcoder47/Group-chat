@@ -9,6 +9,12 @@ def model_to_tuple():
     pass
 
 #USERS
+def get_all_users():
+    with get_connection() as conn, conn.cursor() as curs:
+        query = """SELECT * FROM Users"""
+        curs.execute(query)
+        return curs.fetchall()
+
 def get_user(email: str):
     with get_connection() as conn, conn.cursor() as curs:
         query = """SELECT * FROM Users WHERE email = %s"""
@@ -38,6 +44,12 @@ def delete_user(email: str):
     return bool(res)
 
 #EMAIL_CODES
+def get_all_email_codes():
+    with get_connection() as conn, conn.cursor() as curs:
+        query = """SELECT * FROM Email_codes"""
+        curs.execute(query)
+        return curs.fetchall()
+
 def get_email_code(email: str):
     with get_connection() as conn, conn.cursor() as curs:
         query = """SELECT * FROM Email_codes WHERE email = %s"""
@@ -69,6 +81,12 @@ def delete_email_code(email: str):
 
 
 #REFRESH_TOKENS
+def get_all_refresh_token():
+    with get_connection() as conn, conn.cursor() as curs:
+        query = """SELECT * FROM Refresh_token"""
+        curs.execute(query)
+        return curs.fetchall()
+
 def get_refresh_token(email: str):
     with get_connection() as conn, conn.cursor() as curs:
         query = """SELECT Refresh_tokens.id, email, hashed_token, expires_at, Refresh_tokens.created_at, revoked

@@ -57,6 +57,11 @@ class DatabaseORM:
             return f"Refresh_token(id={self.id}, user_id={self.user_id}, revoked={self.revoked})"
 
     #USERS
+    def get_all_user(self):
+        with self.get_db() as db:
+            req = db.query(self.User).all()
+            return req
+
     def get_user(self, email: str):
         with self.get_db() as db:
             req = db.query(self.User).filter(self.User.email == email).first()
@@ -84,6 +89,11 @@ class DatabaseORM:
         return bool(self.get_user(email))
     
     #EMAIL_CODES
+    def get_all_email_code(self):
+        with self.get_db() as db:
+            req = db.query(self.Email_code).all()
+            return req
+
     def get_email_code(self, email: str):
         with self.get_db() as db:
             req = db.query(self.Email_code).filter(self.Email_code.email == email).first()
@@ -113,6 +123,11 @@ class DatabaseORM:
     
 
     #REFRESH_TOKEN
+    def get_all_refresh_token(self):
+        with self.get_db() as db:
+            req = db.query(self.Refresh_token).all()
+            return req
+
     def get_refresh_token(self, email: str):
         with self.get_db() as db:
             req = db.query(self.Refresh_token).join(self.User).filter(self.User.email == email).first()

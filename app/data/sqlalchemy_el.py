@@ -41,6 +41,12 @@ class Database:
         return self.engine.connect()
 
     #USERS
+    def get_all_users(self):
+        with self.get_connection() as conn:
+            req = self.users.select()
+            result = conn.execute(req)
+            return result.fetchall()
+
     def get_user(self, email: str):
         with self.get_connection() as conn:
             req = self.users.select().where(self.users.c.email == email)
@@ -69,6 +75,12 @@ class Database:
         return bool(self.get_user(email)) 
 
     #EMAIL_CODES
+    def get_all_email_code(self):
+        with self.get_connection() as conn:
+            req = self.email_codes.select()
+            result = conn.execute(req)
+            return result.fetchall()
+
     def get_email_code(self, email: str):
         with self.get_connection() as conn:
             req = self.email_codes.select().where(self.email_codes.c.email == email)
@@ -98,6 +110,12 @@ class Database:
         return bool(self.get_email_code(email)) 
 
     #REFRESH_TOKENS
+    def get_all_refresh_token(self):
+        with self.get_connection() as conn:
+            req = self.refresh_tokens.select()
+            result = conn.execute(req)
+            return result.fetchall()
+
     def get_refresh_token(self, email: str):
         with self.get_connection() as conn:
             user = self.get_user(email)
