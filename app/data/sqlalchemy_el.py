@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Table, Column, Text, Integer, String, DateTime, Boolean, ForeignKey, insert, delete, create_engine
+from sqlalchemy import MetaData, Table, Column, Text, Integer, String, DateTime, Boolean, ForeignKey, create_engine
 from app.config import settings
 
 class Database:
