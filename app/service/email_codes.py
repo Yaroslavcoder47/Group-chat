@@ -6,14 +6,14 @@ db = Database()
 def get_all() -> list[Email_code]:
     return db.get_all_email_code()
 
-def get_one(user: Email_code) -> Email_code:
-    return db.get_email_code()
+def get_one(code: Email_code) -> Email_code:
+    return db.get_email_code(code.email)
 
-def create() -> Email_code:
-    return db.create_email_code()
+def create(code: Email_code) -> Email_code:
+    return db.create_email_code(code)
 
-def modify(user: Email_code) -> Email_code:
-    return db.modify_email_code()
+def modify(code: Email_code) -> Email_code:
+    return db.modify_email_code(code.email, code.verified)
 
-def delete(user: Email_code) -> bool:
-    return db.delete_email_code()
+def delete(code: Email_code) -> bool:
+    return db.delete_email_code(code.email)

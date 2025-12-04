@@ -4,13 +4,19 @@ from datetime import datetime
 class User(BaseModel):
     email: EmailStr = Field(max_length=40)
     username: str = Field(default="Undefined", max_length=15)
-    created_at: datetime 
+    created_at: datetime
+    
+    def tuple(self):
+        return (self.email, self.username, self.created_at)
 
 class Email_code(BaseModel):
     email: EmailStr = Field(max_length=40)
     hashed_code: SecretStr
     verified: bool
     created_at: datetime
+
+    def tuple(self):
+        return (self.email, str(self.hashed_code), self.verified, self.created_at)
 
 class Refresh_token(BaseModel):
     email: EmailStr = Field(max_length=40)
@@ -19,4 +25,5 @@ class Refresh_token(BaseModel):
     created_at: datetime
     revoked: bool
 
-    
+    def tuple(self):
+        return (self.email, str(self.hashed_token), self.expires_at, self.created_at, self.revoked)

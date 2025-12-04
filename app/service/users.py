@@ -7,13 +7,13 @@ def get_all() -> list[User]:
     return db.get_all_users()
 
 def get_one(user: User) -> User:
-    return db.get_user()
+    return db.get_user(user.email)
 
-def create() -> User:
-    return db.create_user()
+def create(user: User) -> User:
+    return db.create_user(user)
 
 def modify(user: User) -> User:
-    return db.modify_user()
+    return db.modify_user(user.email, user.username)
 
 def delete(user: User) -> bool:
-    return db.delete_user()
+    return db.delete_user(user.email)
