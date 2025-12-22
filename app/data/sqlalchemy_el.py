@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Table, Column, Text, Integer, String, DateTime, Boolean, ForeignKey, create_engine, select
+from sqlalchemy import MetaData, Table, Column, Text, Integer, String, DateTime, Boolean, ForeignKey, create_engine, select, desc
 from app.config import settings
 from app.schemas.models import User, Email_code, Refresh_token
 
@@ -108,7 +108,7 @@ class Database:
 
     def get_email_code(self, email: str):
         with self.get_connection() as conn:
-            req = self.email_codes.select().where(self.email_codes.c.email == email)
+            req = self.email_codes.select().where(self.email_codes.c.email == email).order_by(desc(self.email_codes.c.id))
             result = conn.execute(req)
             return self.row_to_model_emailcode(result.fetchone())
         
@@ -121,9 +121,9 @@ class Database:
         return self.get_email_code(email)
 
 
-    def modify_email_code(self, email: str, verified_res: bool):
+    def modify_email_code(self, email: str, code_hash : str, verified_res: bool):
         with self.get_connection() as conn:
-            req = self.email_codes.update().where(self.email_codes.c.email == email).values(verified = verified_res)
+            req = self.email_codes.update().where(self.email_codes.c.email == email, self.email_codes.c.hashed_code == code_hash).values(verified = verified_res)
             conn.execute(req)
             conn.commit()
         return self.get_email_code(email)

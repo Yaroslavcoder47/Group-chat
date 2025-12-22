@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     password: str
     db_name: str
     conn_str: str
+    smtp_login: str
+    smtp_password: str
     
 
 settings = Settings()

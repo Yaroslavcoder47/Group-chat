@@ -16,7 +16,7 @@ class Email_code(BaseModel):
     created_at: datetime
 
     def tuple(self):
-        return (self.email, str(self.hashed_code), self.verified, self.created_at)
+        return (self.email, self.hashed_code.get_secret_value(), self.verified, self.created_at)
 
 class Refresh_token(BaseModel):
     email: EmailStr = Field(max_length=40)

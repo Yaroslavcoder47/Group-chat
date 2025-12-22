@@ -13,7 +13,7 @@ def create(code: Email_code) -> Email_code:
     return db.create_email_code(code)
 
 def modify(code: Email_code) -> Email_code:
-    return db.modify_email_code(code.email, code.verified)
+    return db.modify_email_code(code.email, code.hashed_code.get_secret_value(), code.verified)
 
 def delete(code: Email_code) -> bool:
     return db.delete_email_code(code.email)
