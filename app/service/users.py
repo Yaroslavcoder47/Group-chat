@@ -6,8 +6,8 @@ db = Database()
 def get_all() -> list[User]:
     return db.get_all_users()
 
-def get_one(user: User) -> User:
-    return db.get_user(user.email)
+def get_one(email : str) -> User:
+    return db.get_user(email)
 
 def create(user: User) -> User:
     return db.create_user(user)

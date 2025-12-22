@@ -6,8 +6,8 @@ db = Database()
 def get_all() -> list[Refresh_token]:
     return db.get_all_refresh_token()
 
-def get_one(token: Refresh_token) -> Refresh_token:
-    return db.get_refresh_token(token.email)
+def get_one(email : str) -> Refresh_token:
+    return db.get_refresh_token(email)
 
 def create(token: Refresh_token) -> Refresh_token:
     return db.create_refresh_token(token)
