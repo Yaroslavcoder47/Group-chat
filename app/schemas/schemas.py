@@ -15,3 +15,7 @@ class LogIn(BaseModel):
 class ChatSelection(BaseModel):
     username : str = Field(min_length=3, max_length=15)
     chat : str
+
+class TokensOut(BaseModel):
+    access_token : str
+    refresh_token : str
