@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, Field, SecretStr
 from datetime import datetime
 
 class User(BaseModel):
+    id: int | None = None
     email: EmailStr = Field(max_length=40)
     username: str = Field(default="Undefined", max_length=15)
     created_at: datetime

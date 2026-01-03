@@ -46,7 +46,7 @@ class Database:
     
     def row_to_model_user(self, row: tuple) -> User:
         id, email, username, created_at = row
-        return User(email=email, username=username, created_at=created_at)
+        return User(id=id, email=email, username=username, created_at=created_at)
     
     def model_to_row_emailcode(self, email_code: Email_code) -> tuple:
         return email_code.tuple()

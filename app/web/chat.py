@@ -17,13 +17,15 @@ class ConnectionManager:
         self.active_connections[room_id][user_id] = websocket
 
     async def disconnect(self, room_id : int, user_id : int):
-        if room_id in self.active_connections.keys and user_id in self.active_connections[room_id]:
+        if room_id in self.active_connections and user_id in self.active_connections[room_id]:
             del self.active_connections[room_id][user_id]
             if not self.active_connections[room_id]:
                 del self.active_connections[room_id]
 
     async def broadcast(self, message : str, room_id : int, sender_id : int):
-        for user, connection in self.active_connections[room_id]:
+        if room_id not in self.active_connections:
+            return
+        for user, connection in self.active_connections[room_id].items():
             message_class = {
                 "text" : message,
                 "is_self" : user == sender_id
@@ -44,10 +46,5 @@ async def websocket_endpoint(websocket: WebSocket, room_id: int, user_id: int):
             data = await websocket.receive_text()
             await manager.broadcast(f"{username} (ID: {user_id}): {data}", room_id, user_id)
     except WebSocketDisconnect:
-        manager.disconnect(room_id, user_id)
+        await manager.disconnect(room_id, user_id)
         await manager.broadcast(f"{username} (ID: {user_id}) покинул чат.", room_id, user_id)
-
-
-@router.post("/join_chat")
-async def join_chat(body : ChatSelection):
-    return

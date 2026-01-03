@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Group Chat</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>Group Chat</h2>
+      <div id="profile-small"> </div>
+    </div>
+
+    <div id="step-email" class="view">
+      <div class="step">
+        <h3>Enter your email</h3>
+        <input id="email" placeholder="email@example.com" />
+        <button onclick="sendCode()">Send code</button>
+      </div>
+    </div>
+
+    <div id="step-verify" class="view">
+      <div class="step">
+        <h3>Enter verification code for <span id="verify-email"></span></h3>
+        <input id="code" placeholder="123456" />
+        <button onclick="verifyCode()">Verify</button>
+      </div>
+    </div>
+
+    <div id="step-profile" class="view">
+      <div class="step">
+        <h3>Create username and choose topic</h3>
+        <div>Email: <strong id="profile-email"></strong></div>
+        <input id="username" placeholder="Username" />
+        <div id="topics" style="margin-top:12px"></div>
+        <div style="margin-top:8px">Selected: <span id="selected-topic">none</span></div>
+        <button onclick="createProfile()">Enter Chat</button>
+      </div>
+    </div>
+
+    <div id="step-chat" class="view">
+      <div class="step">
+        <h3>Chat: <span id="chat-topic"></span></h3>
+        <div>Logged as: <strong id="chat-username"></strong></div>
+        <div id="messages"></div>
+        <div class="chat-controls">
+          <input id="chat-input" placeholder="Type a message" />
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

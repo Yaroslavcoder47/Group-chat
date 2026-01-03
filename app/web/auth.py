@@ -103,3 +103,20 @@ def logout(response : Response, request : Request):
     response.delete_cookie(key="chat-access-token")
     return JSONResponse(content="Successfully logged out")
 
+
+@router.get("/me")
+def me(request: Request):
+    access_token = request.cookies.get("chat-access-token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail="No access token")
+    access_payload = _decode_token(access_token)
+
+    if access_payload.get("type") != "access":
+        raise HTTPException(status_code=400, detail="Not an access token")
+    if "sub" not in access_payload:
+        raise HTTPException(status_code=404, detail="Token without subject")
+
+    email = access_payload["sub"]
+    user = users.get_one(email)
+    return user
+
