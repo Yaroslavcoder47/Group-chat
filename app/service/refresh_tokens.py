@@ -3,8 +3,8 @@ from app.schemas.models import Refresh_token
 
 db = Database()
 
-def get_all() -> list[Refresh_token]:
-    return db.get_all_refresh_token()
+def get_all(email : str) -> list[Refresh_token]:
+    return db.get_all_refresh_token(email)
 
 def get_one(email : str) -> Refresh_token:
     return db.get_refresh_token(email)

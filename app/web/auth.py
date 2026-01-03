@@ -1,7 +1,9 @@
 import json
+import jwt
 from datetime import datetime, timezone
-from fastapi import APIRouter, HTTPException, Response
-from app.schemas.schemas import VerifyCode, LogIn, TokensOut
+from fastapi import APIRouter, HTTPException, Request, Response, Query
+from fastapi.responses import JSONResponse
+from app.schemas.schemas import VerifyCode, LogIn, TokensOut, ChatSelection
 from app.service.email_codes import get_one, modify
 from app.service.users import create, get_one
 from app.service.refresh_tokens import create
@@ -26,6 +28,18 @@ def _get_pair_tokens(email : str) -> TokensOut:
 
     return TokensOut(access_token=access_token, refresh_token=refresh_token)
 
+def _decode_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(
+            token,
+            auth.config.JWT_SECRET_KEY,
+            algorithms=[auth.config.JWT_ALGORITHM],
+            options={"require": ["exp", "iat"]},
+        )
+    except jwt.PyJWTError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid token: {e}") from e
+    return payload
+
 
 @router.post("/verify-code")
 def code_verification(body : VerifyCode):
@@ -47,4 +61,45 @@ def create_user(body : LogIn, response : Response):
     response.set_cookie(key="chat-access-token", value=tokens_pair.access_token)
     return tokens_pair
 
+
+@router.patch("/refresh")
+def update_token(request : Request, response : Response):
+    access_token = request.cookies.get("chat-access-token")
+    access_payload = _decode_token(access_token)
+
+    if access_payload.get("type") != "access":
+        raise HTTPException(status_code=400, detail="Not an access token")
+    if "sub" not in access_payload:
+        raise HTTPException(status_code=404, detail="Token without subject")
+    
+    email = access_payload["sub"]
+
+    tokens_from_db = refresh_tokens.get_all(email)
+    for token in tokens_from_db:
+        token.revoked = True
+        refresh_tokens.modify(token)
+
+    
+    tokens_pair : TokensOut = _get_pair_tokens(email)
+    response.set_cookie(key="chat-access-token", value=tokens_pair.access_token)
+    return tokens_pair
+
+@router.post("/logout")
+def logout(response : Response, request : Request):
+    access_token = request.cookies.get("chat-access-token")
+    access_payload = _decode_token(access_token)
+
+    if access_payload.get("type") != "access":
+        raise HTTPException(status_code=400, detail="Not an access token")
+    if "sub" not in access_payload:
+        raise HTTPException(status_code=404, detail="Token without subject")
+    
+    email = access_payload["sub"]
+    tokens_from_db = refresh_tokens.get_all(email)
+    for token in tokens_from_db:
+        token.revoked = True
+        refresh_tokens.modify(token)
+
+    response.delete_cookie(key="chat-access-token")
+    return JSONResponse(content="Successfully logged out")
 

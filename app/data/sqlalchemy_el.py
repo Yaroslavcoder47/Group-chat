@@ -136,7 +136,7 @@ class Database:
             return bool(res) 
 
     #REFRESH_TOKENS
-    def get_all_refresh_token(self):
+    def get_all_refresh_token(self, email : str):
         with self.get_connection() as conn:
             req = select(
                 self.refresh_tokens.c.id,
@@ -147,7 +147,7 @@ class Database:
                 self.refresh_tokens.c.revoked
             ).select_from(
                 self.refresh_tokens.join(self.users, self.refresh_tokens.c.user_id == self.users.c.id)
-            )
+            ).where(self.users.c.email == email)
             
             result = conn.execute(req)
             rows = result.fetchall()
